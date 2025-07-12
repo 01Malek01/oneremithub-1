@@ -1,0 +1,15 @@
+{
+    "name": "your-combined-app",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "build:fx-compass": "npm --prefix packages/fx-compass run build",
+      "build:cross-finance": "npm --prefix packages/cross-finance run build",
+      "build": "npm run build:fx-compass && npm run build:cross-finance",
+      "dev:cross-finance": "npm --prefix packages/cross-finance run dev",
+      "dev:fx-compass": "npm --prefix packages/fx-compass run dev"
+    },
+    "workspaces": [
+      "packages/*"
+    ]
+  }
