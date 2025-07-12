@@ -70,7 +70,7 @@ export function DashboardStats({ trades }: DashboardStatsProps) {
           style={{ animation: `fadeIn 0.5s ease-out ${index * 0.1}s forwards` }}
         >
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex items-center justify-center">
+            <div className="p-3 rounded-full bg-white text-black flex items-center justify-center">
               {stat.icon}
             </div>
             <div>
