@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { BarChart3, Banknote, BadgePercent, TrendingUp, Wallet, Receipt, Settings } from 'lucide-react';
+import { BarChart3, Banknote, BadgePercent, TrendingUp, Wallet, Receipt, Settings, CircleArrowRight } from 'lucide-react';
 
 const menuItems = [
   {
@@ -12,6 +12,11 @@ const menuItems = [
     title: "Fx Market",
     path: "/fx-market",
     icon: BadgePercent,
+  },
+  {
+    title:"Bybit Explorer",
+    path:"/bybit-explorer",
+    icon: CircleArrowRight 
   },
   {
     title: "Transactions",

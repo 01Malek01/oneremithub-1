@@ -13,11 +13,12 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     federation({
-      name: 'cross_finance_host', // A unique name for your host app
+      name: 'cross_finance_host', 
       remotes: {
-        fx_compass: '/fx-compass-mfe/assets/remoteEntry.js', // Point to your FX Compass remoteEntry.js
+        fx_compass: '/fx-compass-mfe/assets/remoteEntry.js', 
+        bybit_explorer: '/bybit-explorer-mfe/assets/remoteEntry.js', 
       },
-      shared: ['react', 'react-dom'], // Share common dependencies
+      shared: ['react', 'react-dom'], 
     }),
     mode === 'development' &&
     componentTagger(),

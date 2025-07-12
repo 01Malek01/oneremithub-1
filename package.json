@@ -1,15 +1,17 @@
 {
-    "name": "your-combined-app",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
+  "name": "oneremithub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
       "build:fx-compass": "npm --prefix packages/fx-compass run build",
+      "build:bybit-explorer": "npm --prefix packages/bybit-explorer run build",
       "build:cross-finance": "npm --prefix packages/cross-finance run build",
-      "build": "npm run build:fx-compass && npm run build:cross-finance",
+      "build": "npm run build:fx-compass && npm run build:bybit-explorer && npm run build:cross-finance",
       "dev:cross-finance": "npm --prefix packages/cross-finance run dev",
-      "dev:fx-compass": "npm --prefix packages/fx-compass run dev"
+      "dev:fx-compass": "npm --prefix packages/fx-compass run dev",
+      "dev:bybit-explorer": "npm --prefix packages/bybit-explorer run dev"
     },
-    "workspaces": [
-      "packages/*"
-    ]
-  }
+  "workspaces": [
+    "packages/*"
+  ]
+}

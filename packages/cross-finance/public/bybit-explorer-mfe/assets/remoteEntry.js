@@ -2,8 +2,8 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "./App":()=>{
-      dynamicLoadingCss(["style-cj4WX02k.css"], false, './App');
-      return __federation_import('./__federation_expose_App-C9DTAK1I.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["style-BRbOc7mb.css"], false, './App');
+      return __federation_import('./__federation_expose_App-Bssum50w.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
@@ -44,7 +44,7 @@ const currentImports = {};
          }
          
           if (dontAppendStylesToHead) {
-            const key = 'css__fx_compass_mfe__' + exposeItemName;
+            const key = 'css__bybit-explorer__' + exposeItemName;
             window[key] = window[key] || [];
             window[key].push(href);
             return;

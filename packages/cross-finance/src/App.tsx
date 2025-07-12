@@ -14,6 +14,7 @@ import Rails from "./pages/Rails";
 import Loans from "./pages/Loans";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import BybitExplorer from "./pages/BybitExplorer";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,8 @@ const App = () => (
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/fx-market" element={<Exchange />} />
+            <Route path="/bybit-explorer" element={<BybitExplorer />} />
+
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/rails" element={<Rails />} />
