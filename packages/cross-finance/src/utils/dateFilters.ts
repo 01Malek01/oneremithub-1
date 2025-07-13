@@ -1,45 +1,44 @@
+export type TimePeriod = '7d' | '30d' | '90d' | '1y' | 'daily' | 'weekly' | 'monthly' | 'yearly';
 
-import { DailyTransaction } from '@/types/transactions';
-
-export type TimePeriod = 'daily' | 'weekly' | 'monthly' | 'yearly';
-
-export function filterTransactionsByPeriod(transactions: DailyTransaction[], period: TimePeriod): DailyTransaction[] {
-  const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  
-  let startDate: Date;
-  
-  switch (period) {
-    case 'daily':
-      startDate = startOfDay;
-      break;
-    case 'weekly':
-      const dayOfWeek = now.getDay();
-      startDate = new Date(startOfDay);
-      startDate.setDate(startDate.getDate() - dayOfWeek);
-      break;
-    case 'monthly':
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      break;
-    case 'yearly':
-      startDate = new Date(now.getFullYear(), 0, 1);
-      break;
-    default:
-      startDate = startOfDay;
-  }
-  
-  return transactions.filter(tx => {
-    const txDate = new Date(tx.transactionDate);
-    return txDate >= startDate;
+export const filterTransactionsByDateRange = (
+  transactions: any[],
+  startDate: Date,
+  endDate: Date
+) => {
+  return transactions.filter(transaction => {
+    const transactionDate = new Date(transaction.date);
+    return transactionDate >= startDate && transactionDate <= endDate;
   });
-}
+};
 
-export function getPeriodLabel(period: TimePeriod): string {
-  switch (period) {
-    case 'daily': return 'Today';
-    case 'weekly': return 'This Week';
-    case 'monthly': return 'This Month';
-    case 'yearly': return 'This Year';
-    default: return 'Today';
-  }
-}
+export const filterTransactionsByPeriod = (transactions: any[], period: TimePeriod) => {
+  const now = new Date();
+  const daysMap = { 
+    '7d': 7, '30d': 30, '90d': 90, '1y': 365,
+    'daily': 1, 'weekly': 7, 'monthly': 30, 'yearly': 365 
+  };
+  const days = daysMap[period] || 30;
+  const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+  return filterTransactionsByDateRange(transactions, startDate, now);
+};
+
+export const getPeriodLabel = (period: TimePeriod): string => {
+  const labels = {
+    '7d': 'Last 7 days',
+    '30d': 'Last 30 days', 
+    '90d': 'Last 90 days',
+    '1y': 'Last year',
+    'daily': 'Daily',
+    'weekly': 'Weekly',
+    'monthly': 'Monthly', 
+    'yearly': 'Yearly'
+  };
+  return labels[period] || 'Unknown';
+};
+
+export const getDateRangeOptions = () => [
+  { label: 'Last 7 days', days: 7 },
+  { label: 'Last 30 days', days: 30 },
+  { label: 'Last 90 days', days: 90 },
+  { label: 'Last year', days: 365 },
+];

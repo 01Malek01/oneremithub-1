@@ -1,7 +1,4 @@
 import { lazy, Suspense } from "react";
-
-
-
 const FXCompass = lazy(() => import("fx_compass/App"));
 const Exchange = () => {
   return (

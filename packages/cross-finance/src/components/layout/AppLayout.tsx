@@ -1,16 +1,11 @@
+import { Outlet } from 'react-router-dom';
+import Header from './Header';
 
-import { Outlet } from "react-router-dom";
-import Header from "./Header";
-
-export function AppLayout() {
+export const AppLayout = () => {
   return (
-    // <SidebarProvider>
-        <main className=" ">
-          <header className="bg-[#141414]">
-          <Header />
-          </header>
-          <Outlet />
-        </main>
-    // </SidebarProvider> 
+    <div className="min-h-screen bg-[#141414]">
+      <Header />
+      <Outlet />
+    </div>
   );
-}
+};

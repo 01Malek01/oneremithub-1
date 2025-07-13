@@ -1,28 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronDown, Calendar, DollarSign, CheckCircle } from 'lucide-react';
 
 interface FilterButtonProps {
   label: string;
+  icon: React.ReactNode;
   onClick?: () => void;
+  isActive?: boolean;
 }
 
-const FilterButton: React.FC<FilterButtonProps> = ({ label, onClick }) => (
+const FilterButton: React.FC<FilterButtonProps> = ({ label, icon, onClick, isActive = false }) => (
   <button 
-    className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#303030] pl-4 pr-2"
+    className={`glass-button group relative flex h-10 items-center justify-center gap-2 rounded-full px-4 py-2 transition-all duration-300 hover:scale-105 ${
+      isActive ? 'bg-primary/20 border-primary/50' : ''
+    }`}
     onClick={onClick}
   >
-    <p className="text-white text-sm font-medium leading-normal">{label}</p>
-    <div className="text-white">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-        <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
-      </svg>
+    <div className="flex items-center gap-2 text-white">
+      {icon}
+      <span className="text-sm font-medium">{label}</span>
+      <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
     </div>
+    
+    {isActive && (
+      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-purple-500/20 animate-pulse-glow" />
+    )}
   </button>
 );
 
-export const FilterButtons: React.FC = () => (
-  <div className="flex gap-3 p-3 flex-wrap pr-4">
-    <FilterButton label="Date Range" />
-    <FilterButton label="Currency" />
-    <FilterButton label="Transaction Status" />
-  </div>
-);
+export const FilterButtons: React.FC = () => {
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+
+  const filters = [
+    { label: 'Date Range', icon: <Calendar className="w-4 h-4" />, key: 'date' },
+    { label: 'Currency', icon: <DollarSign className="w-4 h-4" />, key: 'currency' },
+    { label: 'Transaction Status', icon: <CheckCircle className="w-4 h-4" />, key: 'status' }
+  ];
+
+  return (
+    <div className="flex gap-4 p-6 flex-wrap animate-slide-up">
+      {filters.map((filter) => (
+        <FilterButton 
+          key={filter.key}
+          label={filter.label} 
+          icon={filter.icon}
+          isActive={activeFilter === filter.key}
+          onClick={() => setActiveFilter(activeFilter === filter.key ? null : filter.key)}
+        />
+      ))}
+    </div>
+  );
+};

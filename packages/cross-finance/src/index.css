@@ -1,105 +1,115 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Glassmorphism Financial Dashboard Design System. 
+All colors MUST be HSL.
+*/
+
 @layer base {
   :root {
-    --background: 220 33% 98%;
-    --foreground: 222 47% 11%;
+    /* Base Colors */
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    /* Glassmorphism Foundation */
+    --glass-primary: 230 60% 15%;
+    --glass-secondary: 240 55% 20%;
+    --glass-accent: 250 70% 25%;
+    
+    /* Glass Surface Colors with Alpha */
+    --glass-surface-primary: 230 60% 15% / 0.15;
+    --glass-surface-secondary: 240 55% 20% / 0.12;
+    --glass-surface-accent: 250 70% 25% / 0.08;
+    
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(230 60% 15% / 0.2), hsl(250 70% 25% / 0.1));
+    --gradient-accent: linear-gradient(135deg, hsl(240 100% 70%), hsl(260 100% 75%));
+    --gradient-success: linear-gradient(135deg, hsl(160 100% 70%), hsl(180 100% 75%));
+    --gradient-warning: linear-gradient(135deg, hsl(45 100% 70%), hsl(30 100% 75%));
+    
+    /* Glass Shadows */
+    --shadow-glass: 0 8px 32px hsl(230 60% 15% / 0.3);
+    --shadow-glass-lg: 0 20px 40px hsl(230 60% 15% / 0.4);
+    --shadow-glow: 0 0 40px hsl(240 100% 70% / 0.3);
+    
+    /* Backdrop Blur */
+    --blur-sm: 8px;
+    --blur-md: 16px;
+    --blur-lg: 24px;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    /* Core UI Colors */
+    --card: 230 60% 15% / 0.15;
+    --card-foreground: 210 40% 98%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    --popover: 230 60% 15% / 0.95;
+    --popover-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11%;
+    --primary: 240 100% 70%;
+    --primary-foreground: 210 40% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
+    --secondary: 240 55% 20% / 0.8;
+    --secondary-foreground: 210 40% 98%;
 
-    --accent: 221 70% 45%;
+    --muted: 230 60% 15% / 0.6;
+    --muted-foreground: 215 20.2% 75%;
+
+    --accent: 250 70% 25% / 0.8;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 210 40% 98%;
+    --border: 240 55% 20% / 0.3;
+    --input: 240 55% 20% / 0.5;
+    --ring: 240 100% 70%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 210 40% 98%;
+    --radius: 12px;
 
-    --info: 221 83% 53%;
-    --info-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 222 47% 11%;
+    /* Sidebar Glass Theme */
+    --sidebar-background: 230 60% 10% / 0.95;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary: 240 100% 70%;
+    --sidebar-primary-foreground: 210 40% 15%;
+    --sidebar-accent: 240 55% 20% / 0.5;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-border: 240 55% 20% / 0.3;
+    --sidebar-ring: 240 100% 70%;
+
+    /* Animation Timing */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .dark {
-    --background: 222 47% 11%;
+    /* Keep same values for dark mode since we're designing for dark theme */
+    --background: 222 84% 4.9%;
     --foreground: 210 40% 98%;
-
-    --card: 217 33% 17%;
+    --card: 230 60% 15% / 0.15;
     --card-foreground: 210 40% 98%;
-
-    --popover: 217 33% 17%;
+    --popover: 230 60% 15% / 0.95;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 217 32% 17%;
+    --primary: 240 100% 70%;
+    --primary-foreground: 210 40% 15%;
+    --secondary: 240 55% 20% / 0.8;
     --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 221 70% 45%;
+    --muted: 230 60% 15% / 0.6;
+    --muted-foreground: 215 20.2% 75%;
+    --accent: 250 70% 25% / 0.8;
     --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 84% 60%;
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
-
-    --success: 142 71% 45%;
-    --success-foreground: 210 40% 98%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 210 40% 98%;
-
-    --info: 221 83% 53%;
-    --info-foreground: 210 40% 98%;
-
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 224 76% 48%;
-
-    --sidebar-background: 222 47% 11%;
+    --border: 240 55% 20% / 0.3;
+    --input: 240 55% 20% / 0.5;
+    --ring: 240 100% 70%;
+    --sidebar-background: 230 60% 10% / 0.95;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217 33% 17%;
+    --sidebar-primary: 240 100% 70%;
+    --sidebar-primary-foreground: 210 40% 15%;
+    --sidebar-accent: 240 55% 20% / 0.5;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-border: 240 55% 20% / 0.3;
+    --sidebar-ring: 240 100% 70%;
   }
 }
 
@@ -107,55 +117,70 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    background: linear-gradient(135deg, hsl(220 25% 8%), hsl(230 20% 4%));
+    background-attachment: fixed;
+    overflow-x: hidden;
   }
-  
-  .dashboard-card {
-    @apply bg-card rounded-lg border p-4 shadow-sm transition-all hover:shadow-md;
+
+  /* Glass Morphism Utilities */
+  .glass-card {
+    background: var(--gradient-primary);
+    backdrop-filter: blur(var(--blur-md));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-glass);
+    transition: var(--transition-smooth);
   }
-  
-  .currency-value {
-    @apply font-mono;
+
+  .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glass-lg);
   }
-  
-  .stat-card {
-    @apply p-4 rounded-md flex flex-col;
+
+  .glass-button {
+    background: var(--gradient-primary);
+    backdrop-filter: blur(var(--blur-sm));
+    border: 1px solid hsl(var(--border));
+    transition: var(--transition-smooth);
   }
-  
-  .stat-title {
-    @apply text-sm font-medium text-muted-foreground;
+
+  .glass-button:hover {
+    background: hsl(var(--glass-accent) / 0.15);
+    box-shadow: var(--shadow-glow);
   }
-  
-  .stat-value {
-    @apply text-2xl font-semibold;
+
+  /* Animated Counter */
+  @keyframes countUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
-  
-  .stat-desc {
-    @apply text-xs text-muted-foreground mt-1;
+
+  .animate-count-up {
+    animation: countUp 0.6s ease-out;
   }
-  
-  .trend-up {
-    @apply text-success flex items-center;
+
+  /* Floating Animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
   }
-  
-  .trend-down {
-    @apply text-destructive flex items-center;
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
   }
-  
-  .data-table {
-    @apply w-full text-sm;
+
+  /* Glow Effect */
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
   }
-  
-  .data-table th {
-    @apply px-4 py-2 text-left font-medium text-muted-foreground;
-  }
-  
-  .data-table td {
-    @apply px-4 py-2 border-t;
-  }
-  
-  .data-table tr:hover {
-    @apply bg-muted/50;
+
+  /* Gradient Text */
+  .gradient-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

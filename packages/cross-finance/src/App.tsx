@@ -29,7 +29,6 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/fx-market" element={<Exchange />} />
             <Route path="/bybit-explorer" element={<BybitExplorer />} />
-
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/rails" element={<Rails />} />
