@@ -1,9 +1,0 @@
-{
-    "build": {
-      "env": {
-        "NPM_CONFIG_WORKSPACE": "packages/cross-finance" 
-      }
-    },
-    "buildCommand": "npm run build", 
-    "outputDirectory": "packages/cross-finance/dist"
-}
