@@ -5,6 +5,5 @@
       }
     },
     "buildCommand": "npm run build", 
-    "outputDirectory": "packages/cross-finance/dist", 
-    "rootDirectory": "./" 
-  }
+    "outputDirectory": "packages/cross-finance/dist"
+}
