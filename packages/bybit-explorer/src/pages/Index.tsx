@@ -456,13 +456,13 @@ useEffect(() => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', `trades_export_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+      link.setAttribute('download', `trades_export_${users[selectedUserIndex].name}_${format(new Date(), 'yyyy-MM-dd')}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       
-      toast.success(`Exported ${allTrades.length} trades to CSV`);
+      toast.success(`Exported ${allTrades.length} trades to CSV For trader ${users[selectedUserIndex].name}`);
     } catch (error) {
       console.error('Error exporting to CSV:', error);
       toast.error('Failed to export trades. Please try again.');

@@ -101,7 +101,7 @@ const TradesTable = ({ trades, onFilterChange, isLoading, onLoadMore, hasMore }:
     else if (["30", "70", "100"].includes(filter)) variant = "secondary"; // Disputed
 
     return (
-      <Badge variant={variant} className="text-xs">
+      <Badge variant={variant} className="text-xs bg-slate-700/50 text-white">
         {filterText}
       </Badge>
     );
@@ -211,7 +211,7 @@ const TradesTable = ({ trades, onFilterChange, isLoading, onLoadMore, hasMore }:
             </div>
   
             {/* Filter Dropdown */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Select
                 value={selectedFilter ?? "all"}
                 onValueChange={(value) => {
@@ -234,7 +234,7 @@ const TradesTable = ({ trades, onFilterChange, isLoading, onLoadMore, hasMore }:
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
   
             <div className="flex items-center gap-2">
               {selectedTrades.size > 0 && (

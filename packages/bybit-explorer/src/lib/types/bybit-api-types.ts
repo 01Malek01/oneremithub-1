@@ -4,8 +4,8 @@ export const STATUS_MAP: Record<string, string> = {
   "10": "Waiting for buyer to pay",
   "20": "Waiting for seller to release",
   "30": "Appealing",
-  "40": "Order canceled",
-  "50": "Order finished"
+  "40": "Order Cancelled",
+  "50": "Order Finished"
 };
 
 // Order type definition
