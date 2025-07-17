@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import CreateTransactionForm from '@/components/transactions/CreateTransactionForm';
 import { Transaction } from '@/types/transactions';
-
+import TransactionsGrid from '@/components/transactions/TransactionsGrid';
+import CounterpartyForm from '@/components/transactions/CounterpartyForm';
+import { Counterparty } from '@/types/transactions';
+import useGetCounterparties from '@/hooks/useGetCounterparties';
 const Transactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [counterparties , setCounterparties] = useState<string[]>([]);
+  
+     
   return (
 <div className="transactions-container flex flex-col w-full h-full ">
-<CreateTransactionForm transactions={transactions} setTransactions={setTransactions} counterparties={counterparties} setCounterparties={setCounterparties} />
+<TransactionsGrid />
+<div className="bg-white mt-20 p-4">
 
+<CounterpartyForm />
+</div>
 </div>
   );
 };

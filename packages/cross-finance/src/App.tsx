@@ -15,7 +15,10 @@ import Loans from "./pages/Loans";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import BybitExplorer from "./pages/BybitExplorer";
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 const queryClient = new QueryClient();
 
 const App = () => (

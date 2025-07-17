@@ -7,10 +7,12 @@ import { z } from "zod";
 import { Button } from '../ui/button';
 import { Counterparty } from '@/types/transactions';
 import { toast } from 'sonner';
+import useAddCounterparty from '@/hooks/useAddCounterparty';
 type Props = {
     setCounterparties : React.Dispatch<React.SetStateAction<Counterparty[]>>;
 }
-export default function CounterpartyForm({ setCounterparties }:Props) {
+export default function CounterpartyForm() {
+    const { mutateAsync: addCounterparty } = useAddCounterparty();
     const formSchema = z.object({
         name: z.string().min(1, "Name is required"),
     });
@@ -21,7 +23,7 @@ export default function CounterpartyForm({ setCounterparties }:Props) {
         },
     });
     const onSubmitCounterparty = (data: z.infer<typeof formSchema>) => {
-        setCounterparties((prev) => [...prev, { id: prev.length + 1, name: data.name }]);
+        addCounterparty(data as Counterparty);
         toast.success("Counterparty created successfully");
         formCounterparty.reset();
     };
