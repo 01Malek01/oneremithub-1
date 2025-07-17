@@ -94,14 +94,27 @@ const TradesTable = ({ trades, onFilterChange, isLoading, onLoadMore, hasMore }:
   const getFilterBadge = (filter: string) => {
     const filterText = STATUS_MAP[filter] || filter;
     let variant: "default" | "secondary" | "destructive" | "outline" = "secondary";
+    let className = "text-xs text-white";
 
-    if (filter === "50") variant = "default"; // Completed
-    else if (filter === "40" || filter === "80") variant = "destructive"; // Cancelled
-    else if (["5", "10", "20", "60", "90", "110"].includes(filter)) variant = "outline"; // In progress
-    else if (["30", "70", "100"].includes(filter)) variant = "secondary"; // Disputed
+    if (filter === "50") {
+      variant = "default"; // Completed
+      className += " bg-green-600/80 hover:bg-green-600";
+    } else if (filter === "40" || filter === "80") {
+      variant = "destructive"; // Cancelled
+      className += " bg-red-600/80 hover:bg-red-600";
+    } else if (["5", "10", "20", "60", "90", "110"].includes(filter)) {
+      variant = "outline"; // In progress
+      className += " bg-blue-600/80 hover:bg-blue-600 border-blue-400";
+    } else if (["30", "70", "100"].includes(filter)) {
+      variant = "secondary"; // Disputed
+      className += " bg-yellow-600/80 hover:bg-yellow-600";
+    } else {
+      // Default case for any other status
+      className += " bg-slate-700/80 hover:bg-slate-600";
+    }
 
     return (
-      <Badge variant={variant} className="text-xs bg-slate-700/50 text-white">
+      <Badge variant={variant} className={className}>
         {filterText}
       </Badge>
     );
