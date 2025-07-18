@@ -5,23 +5,22 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Transaction } from '@/types/transactions';
 import useGetCounterparties from '@/hooks/useGetCounterparties';
 import useAddCounterparty from '@/hooks/useAddCounterparty';
-import useDeleteCounterparty from '@/hooks/useDeleteCounterparty';    
+import useDeleteCounterparty from '@/hooks/useDeleteCounterparty';    
 import useGetTransactions from '../../hooks/useGetTransactions';
 import useUpdateTransaction from '@/hooks/useUpdateTransaction';
 import useInsertTransaction from '@/hooks/useInsertTransaction';
 import useDeleteTransaction from '@/hooks/useDeleteTransaction';
 import { v4 as uuidv4 } from 'uuid';
-import { Trash2, Save } from 'lucide-react'
+import { Trash2, Save, Plus, Loader2 } from 'lucide-react';
 import { Counterparty } from '@/types/transactions';
 
 export default function TransactionsGrid() {
-    const { data: transactions, refetch } = useGetTransactions();
+    const { data: transactions, refetch, isLoading: isFetching } = useGetTransactions();
     const { mutateAsync: updateTransaction } = useUpdateTransaction();
     const { mutateAsync: insertTransaction } = useInsertTransaction();
     const { mutateAsync: deleteTransaction } = useDeleteTransaction();
-    const { mutateAsync: addCounterparty } = useAddCounterparty(); // Assuming you have this hook
-    const { mutateAsync: deleteCounterparty } = useDeleteCounterparty(); // Assuming you have this hook
-    const [isLoading, setIsLoading] = useState(false);
+
+    const [isSaving, setIsSaving] = useState(false);
     
     const [rowData, setRowData] = useState<Transaction[]>([]);
     const gridRef = useRef<AgGridReact<Transaction>>(null);
@@ -36,30 +35,49 @@ export default function TransactionsGrid() {
         setCounterpartyList(counterparties);
     }, [counterparties]);
 
+    // Calculate margin percentage for a transaction
+    const calculateMarginPercentage = useCallback((transaction: Transaction): number => {
+        const costPrice = transaction.usdc_quantity * transaction.usdc_rate_naira;
+        const pnl = transaction.selling_price_naira - costPrice;
+        return costPrice !== 0 ? (pnl / costPrice) * 100 : 0;
+    }, []);
+
+    // Update row data with calculated margin
+    const updateRowWithCalculatedValues = useCallback((transaction: Transaction): Transaction => {
+        return {
+            ...transaction,
+            margin_percentage: calculateMarginPercentage(transaction)
+        };
+    }, [calculateMarginPercentage]);
+
     // Use useMemo for colDefs to react to changes in counterpartyList
     const colDefs = useMemo<ColDef<Transaction>[]>(() => ([
         { field: 'id', headerName: 'ID', editable: false, hide: true },
         { field: 'date', headerName: 'Date',editable: true },
-        { field: 'currency_payout', headerName: 'Currency',editable: true },
+        { field: 'currency_payout', headerName: 'Currency',editable: true, 
+            cellEditor: 'agSelectCellEditor',
+             cellEditorParams: { 
+                 values: ['USD', 'EUR', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'NZD', 'CNY', 'RMB'] 
+             }
+         },
         { 
-            field: 'counter_party', 
+            field: 'counterparty_id', 
             headerName: 'Counter Party',
             editable: true,
             cellEditor: 'agSelectCellEditor',
             cellEditorParams: { 
-                values: counterpartyList.map(counterparty => counterparty.name) 
+                values: counterpartyList.map(counterparty => counterparty.id) 
             },
             valueFormatter: (params) => {
-                const counterparty = counterpartyList.find(c => c.name === params.value);
+                const counterparty = counterpartyList.find(c => c.id === params.value);
                 return counterparty ? counterparty.name : params.value;
             }
         },
-
         { 
             field: 'usdc_quantity', 
             headerName: 'USDC Quantity',
             editable: true,
-            valueFormatter: (params) => params.value?.toLocaleString() || ''
+            valueFormatter: (params) => params.value?.toLocaleString() || '',
         },
         { 
             field: 'usdc_rate_naira', 
@@ -79,16 +97,30 @@ export default function TransactionsGrid() {
             editable: true,
             valueFormatter: (params) => params.value?.toLocaleString() || ''
         },
+        { 
+            field: 'cost_price_naira', 
+            headerName: 'Cost Price (₦)',
+            editable: true,
+            valueFormatter: (params) => params.value?.toLocaleString() || '',
+            valueGetter: (params) => params.data.usdc_quantity * params.data.usdc_rate_naira,
+        },
         { field: 'transaction_status', headerName: 'Status', editable: true },
         { 
             field: 'margin_percentage', 
             headerName: 'Margin (%)',
-            editable: true,
-            valueFormatter: (params) => params.value ? `${params.value.toFixed(2)}%` : ''
+            editable: false, // Set to false since it's calculated
+            valueFormatter: (params) => params.value ? `${params.value.toFixed(2)}%` : '0%',
         },
         { 
             field: 'pnl_naira', 
             headerName: 'P&L (₦)',
+            editable: true,
+            valueFormatter: (params) => params.value?.toLocaleString() || '',
+            valueGetter: (params) => params.data.selling_price_naira - params.data.cost_price_naira,
+        },
+        { 
+            field: 'note', 
+            headerName: 'Note',
             editable: true,
             valueFormatter: (params) => params.value?.toLocaleString() || ''
         },
@@ -105,17 +137,17 @@ export default function TransactionsGrid() {
                     <div className="flex items-center space-x-2">
                         <button 
                             onClick={() => handleSaveOrUpdate(params.data)}
-                            className="text-green-500 hover:text-green-700 p-1"
+                            className="text-green-500 hover:text-green-700 p-1 disabled:opacity-50 disabled:cursor-not-allowed"
                             title={isNewRow ? "Save new transaction" : "Update transaction"}
-                            disabled={isLoading}
+                            disabled={isSaving || isFetching}
                         >
                             <Save size={18} />
                         </button>
                         <button 
                             onClick={() => handleDelete(params.data.id)}
-                            className="text-red-500 hover:text-red-700 p-1"
+                            className="text-red-500 hover:text-red-700 p-1 disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Delete transaction"
-                            disabled={isLoading}
+                            disabled={isSaving || isFetching}
                         >
                             <Trash2 size={18} />
                         </button>
@@ -123,7 +155,7 @@ export default function TransactionsGrid() {
                 );
             }
         }
-    ]), [counterpartyList, isLoading]); // Dependency array for useMemo
+    ]), [counterpartyList, isSaving, isFetching]);
 
     const defaultColDef = {
         flex: 1,
@@ -139,19 +171,23 @@ export default function TransactionsGrid() {
 
     const handleSaveOrUpdate = async (rowToSave: Transaction) => {
         try {
-            setIsLoading(true);
+            setIsSaving(true);
             const isNewRow = typeof rowToSave.id === 'string' && rowToSave.id.startsWith('temp-');
+            
+            // Calculate margin before saving
+            const updatedRow = updateRowWithCalculatedValues(rowToSave);
+            console.log("rowToSave", updatedRow);
 
             if (isNewRow) {
-                const { id: tempId, ...newTransactionData } = rowToSave;
+                const { id: tempId, ...newTransactionData } = updatedRow;
                 const insertedTransaction = await insertTransaction(newTransactionData as Omit<Transaction, 'id'>);
                 
                 setRowData(prevRowData =>
                     prevRowData.map(row => (row.id === tempId ? { ...insertedTransaction, id: insertedTransaction.id } : row))
                 );
-                gridRef.current?.api.applyTransaction({ update: [{ ...rowToSave, id: insertedTransaction.id }] });
-            } else if (rowToSave.id) {
-                const { id, ...updates } = rowToSave;
+                gridRef.current?.api.applyTransaction({ update: [{ ...updatedRow, id: insertedTransaction.id }] });
+            } else if (updatedRow.id) {
+                const { id, ...updates } = updatedRow;
                 await updateTransaction({
                     id,
                     updates: updates
@@ -162,35 +198,43 @@ export default function TransactionsGrid() {
             console.error('Error saving/updating transaction:', error);
             setRowData(prev => [...prev]); 
         } finally {
-            setIsLoading(false);
+            setIsSaving(false);
         }
     };
 
     const onCellValueChanged = async (event: CellValueChangedEvent<Transaction>) => {
+        // Update the row data with calculated margin
+        const updatedRow = updateRowWithCalculatedValues(event.data);
+        
         setRowData(prevRowData =>
-            prevRowData.map(row => (row.id === event.data.id ? event.data : row))
+            prevRowData.map(row => (row.id === updatedRow.id ? updatedRow : row))
         );
+        
+        // Update the grid display
+        gridRef.current?.api.applyTransaction({ update: [updatedRow] });
     };
 
     const handleDelete = async (id: string | number) => {
         try {
-            setIsLoading(true);
+            setIsSaving(true);
             await deleteTransaction(id);
             setRowData(prevRowData => prevRowData.filter(row => row.id !== id));
             await refetch();
         } catch (error) {
             console.error('Error deleting transaction:', error);
         } finally {
-            setIsLoading(false);
+            setIsSaving(false);
         }
     };
 
     useEffect(() => {
         if (transactions) {
-            setRowData(transactions);
-            initialDataFetchedFromDB.current = transactions;
+            // Update all transactions with calculated margins
+            const updatedTransactions = transactions.map(updateRowWithCalculatedValues);
+            setRowData(updatedTransactions);
+            initialDataFetchedFromDB.current = updatedTransactions;
         }
-    }, [transactions]);
+    }, [transactions, updateRowWithCalculatedValues]);
 
     const onAddRow = useCallback(() => {
         const tempId = `temp-${uuidv4()}`; 
@@ -198,7 +242,7 @@ export default function TransactionsGrid() {
             id: tempId,
             date: new Date().toISOString().split('T')[0], 
             currency_payout: '',
-            counter_party: '', // Initialize with an empty string for the dropdown
+            counterparty_id: '',
             usdc_quantity: 0,
             usdc_rate_naira: 0,
             selling_rate_naira: 0,
@@ -206,6 +250,8 @@ export default function TransactionsGrid() {
             transaction_status: 'Pending', 
             margin_percentage: 0,
             pnl_naira: 0,
+            note: '',
+            cost_price_naira: 0,
         };
 
         setRowData(prevRowData => [...prevRowData, newRow]);
@@ -220,23 +266,28 @@ export default function TransactionsGrid() {
     
     return (
         <div className='h-[600px] w-full relative'>
-            {isLoading && (
-                <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-10">
-                    <div className="bg-white p-4 rounded-lg shadow-lg text-center text-black">
-                        Saving changes...
+            {(isSaving || isFetching) && (
+                <div className="absolute inset-0 bg-black bg-opacity-20 flex flex-col items-center justify-center z-10">
+                    <div className="bg-white p-6 rounded-lg shadow-lg text-center flex flex-col items-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-500 mb-2" />
+                        <p className="text-gray-800">
+                            {isFetching ? 'Loading transactions...' : 'Saving changes...'}
+                        </p>
                     </div>
                 </div>
             )}
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-2 mt-5 px-4">
                 <h2 className="text-xl font-semibold">Transactions</h2>
                 <button 
                     onClick={onAddRow} 
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2"
-                    disabled={isLoading}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-2"
+                    disabled={isSaving || isFetching}
                 >
-                    <span>+</span> Add New Transaction
+                    <Plus size={18} />
+                    <span>Add New Transaction</span>
                 </button>
             </div>
+           
             <AgGridReact 
                 ref={gridRef}
                 className="ag-theme-alpine" 
