@@ -57,7 +57,7 @@ export default function TransactionsGrid() {
         { field: 'currency_payout', headerName: 'Currency',editable: true, 
             cellEditor: 'agSelectCellEditor',
              cellEditorParams: { 
-                 values: ['USD', 'EUR', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'NZD', 'CNY', 'RMB'] 
+                 values: ['USD', 'EUR', 'GBP','CAD'] 
              }
          },
         { 
